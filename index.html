@@ -6,8 +6,10 @@
   <meta name="viewport" content="width=device-width initial-scale=1">
 
   <title>Bingo App</title>
-  <meta name="description" content="A simple bingo app.
-">
+  <meta name="description" content="A simple bingo app.">
+  
+<link rel="stylesheet" href="lib/qunit/qunit-1.18.0.css" />
+<script src="lib/qunit/qunit-1.18.0.js"></script>
 
   <style media="screen" type="text/css">/*! normalize.css v3.0.1 | MIT License | git.io/normalize */
 
@@ -593,77 +595,154 @@ window.onload = function() {
 }
 
 function BingoNumber(num) {
-  this.number = num;
-  this.letter = if (num <= 15) {
-      "B";
-    } else if (num <= 30) {
-      "I";
-    } else if (num <= 45) {
-      "N";
-    } else if (num <= 60) {
-      "G";
-    } else {
-      "O";
-    }
-  };
+  if (num < 1 || num > 75) { throw("invalid bingo number") }
   
-  this.toHtml = function () {
-    return undefined
-  }
+  this.number = num;
+  
+  this.letter = function () {
+    if (num <= 15) {
+      return "B";
+    } else if (num <= 30) {
+      return "I";
+    } else if (num <= 45) {
+      return "N";
+    } else if (num <= 60) {
+      return "G";
+    } else {
+      return "O";
+    }
+  }();
 }
 
 function BingoNumbers(nums) {
-  this.numbers = nums;
+  if (nums != undefined) {
+    this.numbers = nums;
+  } else {
+    this.numbers = [];
+  };
+  
+  this.count = function() { return this.numbers.length; }
+  this.push = function(num) {
+    this.numbers.push(num);
+  }
 }
 
-function BingoNumbersGenerator()
+function generateBingoNumbers(cols) {
+  var numbers = new BingoNumbers();
+  
+  var active;
+  if (cols == undefined) {
+    active = "bingo";
+  } else {
+    active = cols;
+  }
+  
+  var columns = {
+    "b": [ 1, 15],
+    "i": [16, 30],
+    "n": [31, 45],
+    "g": [46, 60],
+    "o": [61, 75]
+  }
+  
+  for (var k in columns) {
+    if (active.indexOf(k) > -1) {
+      for (var num = columns[k][0]; num <= columns[k][1]; num += 1) {
+        numbers.push(new BingoNumber(num));
+      }
+    }
+  }
+  
+  /*
+  if (active.indexOf("b") > -1) {
+    for (var i = 1; i <= 15; i += 1) {
+      numbers.push(new BingoNumber(i));
+    }
+  }
+  
+  if (active.indexOf("i") > -1) {
+    for (var i = 16; i <= 30; i += 1) {
+      numbers.push(new BingoNumber(i));
+    }
+  }
+  
+  if (active.indexOf("n") > -1) {
+    for (var i = 31; i <= 45; i += 1) {
+      numbers.push(new BingoNumber(i));
+    }
+  }
+  
+  if (active.indexOf("g") > -1) {
+    for (var i = 46; i <= 60; i += 1) {
+      numbers.push(new BingoNumber(i));
+    }
+  }
+  
+  if (active.indexOf("o") > -1) {
+    for (var i = 61; i <= 75; i += 1) {
+      numbers.push(new BingoNumber(i));
+    }
+  }
+  */
+  
+  return numbers;
+}
+
+/* Tests */
+test("BingoNumber object", function () {
+  var bn15 = new BingoNumber(15);
+  var bn19 = new BingoNumber(19);
+  var bn32 = new BingoNumber(32);
+  var bn59 = new BingoNumber(59);
+  var bn71 = new BingoNumber(71);
+  
+  // Numbers
+  equal(bn15.number, 15);
+  equal(bn19.number, 19);
+  equal(bn32.number, 32);
+  equal(bn59.number, 59);
+  equal(bn71.number, 71);
+
+  // Letters
+  equal(bn15.letter, "B");
+  equal(bn19.letter, "I");
+  equal(bn32.letter, "N");
+  equal(bn59.letter, "G");
+  equal(bn71.letter, "O");
+  
+  // Invalid Numbers
+  throws(function () { new BingoNumber(-1) }, "invalid bingo number");
+  throws(function () { new BingoNumber(0) }, "invalid bingo number");
+  throws(function () { new BingoNumber(77) }, "invalid bingo number");
+});
+
+test("BingoNumbers object", function () {
+  var bnsempty = new BingoNumbers();
+  var bns1 = new BingoNumbers([new BingoNumber(1)]);
+  
+  // Numbers
+  deepEqual(bnsempty.numbers, []);
+  deepEqual(bns1.numbers, [new BingoNumber(1)]);
+  
+  // Count
+  equal(bnsempty.count(), 0);
+  equal(bns1.count(), 1);
+  
+  // Push
+  bns1.push(new BingoNumber(12));
+  equal(bns1.count(), 2);
+});
+
+test("generateBingoNumbers function", function () {
+  equal(generateBingoNumbers().count(), 75);
+  equal(generateBingoNumbers("b").count(), 15);
+  equal(generateBingoNumbers("bo").count(), 30);
+  equal(generateBingoNumbers("on").count(), 30);
+});
+/* /Tests */
 </script>
-
-  <link rel="canonical" href="/bingo.html">
 </head>
-
-  <body>
-    <div class="current">
-  <div class="letter">
-    <svg
-      height="100"
-      width="100%"
-      viewBox="0 0 100 100">
-      <text
-        x="50%"
-        y="50%"
-        fill="black"
-        text-anchor="middle"
-        font-size="130"
-        dominant-baseline="central"
-        line-height="0">
-      </text>
-    </svg>
-  </div>
-  <div class="number">
-    <svg
-      height="100"
-      width="100%"
-      viewbox="0 0 100 100">
-      <text
-        x="50%"
-        y="50%"
-        fill="black"
-        text-anchor="middle"
-        font-size="130"
-        dominant-baseline="central"
-        line-height="0">
-      </text>
-    </svg>
-  </div>
-</div>
-<div class="called">
-  <div class="column B"><h1 class="letter">B</h1><div class="numbers"></div></div>
-  <div class="column I"><h1 class="letter">I</h1><div class="numbers"></div></div>
-  <div class="column N"><h1 class="letter">N</h1><div class="numbers"></div></div>
-  <div class="column G"><h1 class="letter">G</h1><div class="numbers"></div></div>
-  <div class="column O"><h1 class="letter">O</h1><div class="numbers"></div></div>
-</div>
-
-  </body>
+<body>
+  <div id="qunit"></div>
+</body>
 </html>
