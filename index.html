@@ -591,6 +591,32 @@ window.onload = function() {
     }
   });
 }
+
+function BingoNumber(num) {
+  this.number = num;
+  this.letter = if (num <= 15) {
+      "B";
+    } else if (num <= 30) {
+      "I";
+    } else if (num <= 45) {
+      "N";
+    } else if (num <= 60) {
+      "G";
+    } else {
+      "O";
+    }
+  };
+  
+  this.toHtml = function () {
+    return undefined
+  }
+}
+
+function BingoNumbers(nums) {
+  this.numbers = nums;
+}
+
+function BingoNumbersGenerator()
 </script>
 
   <link rel="canonical" href="/bingo.html">
