@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Bingo</title>
+  <script src="jquery-1.12.0.min.js"></script>
 </head>
 <body>
   <script>
@@ -38,6 +39,14 @@
         }
       }
     }
+
+    $(window).keyup(function(k) {
+      if (k.which == 32) {
+        /* 32 is space */
+      } else if (k.which == 13) {
+        /* 13 is enter */
+      }
+    });
   </script>
 </body>
 </html>
