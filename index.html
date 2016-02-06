@@ -4,49 +4,7 @@
   <meta charset="utf-8">
   <title>Bingo</title>
   <script src="jquery-1.12.0.min.js"></script>
+  <script src="bingo.js"></script>
 </head>
 <body>
-  <script>
-    // shuffle() source: http://bost.ocks.org/mike/shuffle/
-    function shuffle (array) {
-      var m = array.length, t, i;
-      while (m) {
-        i = Math.floor(Math.random() * m--);
-        t = array[m];
-        array[m] = array[i];
-        array[i] = t;
-      }
-      return array;
-    }
-
-    class BingoNumber {
-      constructor(letter, num) {
-        this.letter = letter;
-        this.number = num;
-      }
-
-      static letterFor(num) {
-        if (num <= 15) {
-          this.letter = return "B";
-        } else if (num <= 30) {
-          this.letter = return "I";
-        } else if (num <= 45) {
-          this.letter = return "N";
-        } else if (num <= 60) {
-          this.letter = return "G";
-        } else {
-          this.letter = return "O";
-        }
-      }
-    }
-
-    $(window).keyup(function(k) {
-      if (k.which == 32) {
-        /* 32 is space */
-      } else if (k.which == 13) {
-        /* 13 is enter */
-      }
-    });
-  </script>
-</body>
 </html>
