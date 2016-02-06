@@ -1,233 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Bingo App</title>
-    
-    <!-- qunit -->
-    <link rel="stylesheet" href="lib/qunit/qunit-1.18.0.css" />
-    <script src="lib/qunit/qunit-1.18.0.js"></script>
-    <!-- /qunit -->
-    
-    <style>
-    </style>
-    
-    <script>
-      //////////////////////////////////////////////////////////////////
-      // BingoNumber is a bingo number with a number and a column
-      // letter. Only the numbers 1 through 75 are considered valid
-      // numbers.
-      //
-      // Arguments
-      //   num - The bingo number to be created.
-      //
-      // Returns
-      //   a BingoNumber object
-      //
-      function BingoNumber(num) {
-        if (num < 1 || num > 75 || num == undefined) {
-          throw("invalid bingo number")
-        }
-        
-        // number property with the bingo number.
-        //
-        // Returns
-        //   an Integer
-        //
-        // TODO
-        // * Make this read-only.
-        //
+<head>
+  <meta charset="utf-8">
+  <title>Bingo</title>
+</head>
+<body>
+  <script>
+    // shuffle() source: http://bost.ocks.org/mike/shuffle/
+    function shuffle (array) {
+      var m = array.length, t, i;
+      while (m) {
+        i = Math.floor(Math.random() * m--);
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+      }
+      return array;
+    }
+
+    class BingoNumber {
+      constructor(letter, num) {
+        this.letter = letter;
         this.number = num;
-        
-        // letter property with the letter for this number's
-        // column.
-        //
-        // Returns
-        //   a String of one character
-        //
-        // TODO
-        // * Remove these magic numbers.
-        // * Keep this as a property interface.
-        // * Make this read-only.
-        //
-        this.letter = function () {
-          if (num <= 15) {
-            return "B";
-          } else if (num <= 30) {
-            return "I";
-          } else if (num <= 45) {
-            return "N";
-          } else if (num <= 60) {
-            return "G";
-          } else {
-            return "O";
-          }
-        }();
       }
-      
-      //////////////////////////////////////////////////////////////////
-      // BingoNumbers manages a list of BingoNumbers.
-      //
-      // Arguments
-      //   nums - The list of numbers to be include in the BingoNumbers
-      //          object.
-      //
-      // Returns
-      //   a BingoNumbers object with the given BingoNumber objects, if
-      //   any were given
-      //
-      function BingoNumbers(nums) {
-        // numbers is a list of this object's BingoNumber objects. If
-        // no numbers were provided at instantiation, the list of numbers
-        // will be created empty.  More numbers can be added later.
-        //
-        // Returns
-        //   the Array of BingoNumbers
-        //
-        if (nums != undefined) {
-          this.numbers = nums;
+
+      static letterFor(num) {
+        if (num <= 15) {
+          this.letter = return "B";
+        } else if (num <= 30) {
+          this.letter = return "I";
+        } else if (num <= 45) {
+          this.letter = return "N";
+        } else if (num <= 60) {
+          this.letter = return "G";
         } else {
-          this.numbers = [];
-        };
-        
-        // length function to get the number of BingoNumbers.
-        //
-        // Returns
-        //   an Integer
-        //
-        // TODO
-        // * Implement this as a getter.
-        //
-        this.length = function() { return this.numbers.length; }
-        
-        // push function to add a BingoNumber.
-        //
-        // Arguments
-        //   num - the BingoNumber to add
-        //
-        this.push = function(num) {
-          if (num.length > 1) {
-            while (num.length > 0) {
-              this.numbers.push(num.shift);
-            }
-          } else {
-            this.numbers.push(num);
-          }
-        }
-        
-        // shift function to pull the first BingoNumber.
-        //
-        // Returns
-        //   a BingoNumber
-        //
-        this.shift = function() {
-          return this.numbers.shift();
+          this.letter = return "O";
         }
       }
-      
-      //////////////////////////////////////////////////////////////////
-      // generateBingoNumbers creates a list of bingo numbers.
-      //
-      // Arguments
-      //   cols - Any combination of the letters "bingo" to represent
-      //          which columns of numbers to generate. (default: bingo)
-      //
-      // Returns
-      //   a BingoNumbers object
-      //
-      function generateBingoNumbers(cols) {
-        var numbers = new BingoNumbers();
-        
-        var active;
-        if (cols == undefined) {
-          active = "bingo";
-        } else {
-          active = cols;
-        }
-        
-        var columns = {
-          "b": [ 1, 15],
-          "i": [16, 30],
-          "n": [31, 45],
-          "g": [46, 60],
-          "o": [61, 75]
-        }
-        
-        for (var k in columns) {
-          if (active.indexOf(k) > -1) {
-            for (var num = columns[k][0]; num <= columns[k][1]; num += 1) {
-              numbers.push(new BingoNumber(num));
-            }
-          }
-        }
-        
-        return numbers;
-      }
-      
-      //////////////////////////////////////////////////////////////////
-      // TESTS
-      test("BingoNumber object", function () {
-        var bn15 = new BingoNumber(15);
-        var bn19 = new BingoNumber(19);
-        var bn32 = new BingoNumber(32);
-        var bn59 = new BingoNumber(59);
-        var bn71 = new BingoNumber(71);
-
-        // numbers
-        equal(bn15.number, 15);
-        equal(bn19.number, 19);
-        equal(bn32.number, 32);
-        equal(bn59.number, 59);
-        equal(bn71.number, 71);
-
-        // letters
-        equal(bn15.letter, "B");
-        equal(bn19.letter, "I");
-        equal(bn32.letter, "N");
-        equal(bn59.letter, "G");
-        equal(bn71.letter, "O");
-
-        // Invalid Numbers
-        throws(function () { new BingoNumber }, "invalid bingo number", "a number must be provided");
-        throws(function () { new BingoNumber() }, "invalid bingo number", "a number must be provided");
-        throws(function () { new BingoNumber(-1) }, "invalid bingo number", "negative numbers are invalid");
-        throws(function () { new BingoNumber(0) }, "invalid bingo number", "zero is invalid");
-        throws(function () { new BingoNumber(77) }, "invalid bingo number");
-      });
-      
-      test("BingoNumbers object", function () {
-        var bn1 = new BingoNumber(1);
-        var bnsempty = new BingoNumbers();
-        var bns1 = new BingoNumbers([bn1]);
-        var bns0to15 = new BingoNumbers();
-        
-        // numbers
-        deepEqual(bnsempty.numbers, []);
-        deepEqual(bns1.numbers, [new BingoNumber(1)]);
-        
-        // length()
-        equal(bnsempty.length(), 0);
-        equal(bns1.length(), 1);
-        
-        // push() & shift()
-        bns1.push(new BingoNumber(12));
-        equal(bns1.length(), 2);
-        equal(bns1.shift(), bn1);
-        equal(bns1.length(), 1);
-        equal(bns0to15.length(), 0);
-        bns0to15.push(generateBingoNumbers("b"));
-        equal(bns0to15.length(), 15);
-      });
-      
-      test("generateBingoNumbers function", function () {
-        equal(generateBingoNumbers().length(), 75);
-        equal(generateBingoNumbers("b").length(), 15);
-        equal(generateBingoNumbers("bo").length(), 30);
-        equal(generateBingoNumbers("on").length(), 30);
-      });
-    </script>
-  </head>
-  <body>
-    <div id="qunit"></div>
-  </body>
+    }
+  </script>
+</body>
 </html>
