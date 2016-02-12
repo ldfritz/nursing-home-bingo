@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.BingoNumber {
+  font-family: Arial;
+  height: 100vh;
+  overflow: hidden;
+  position: absolute;
+  text-align: center;
+  transition: left 2s;
+  width: 100vw;
+}
+
+.BingoNumber-letter,
+.BingoNumber-number {
+  height: 0;
+  line-height: 0;
+  position: relative;
+  top: 50vh;
+}
+
+.BingoNumber-letter {
+  font-size: 50vh;
+}
+
+.BingoNumber-number {
+  font-size: 85vh;
+}
