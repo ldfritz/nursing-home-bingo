@@ -4,6 +4,18 @@ class BingoNumber {
     this.num = num;
   }
 
+  toHTML() {
+    return `
+     <div class="BingoNumber">
+       <span class="BingoNumber-letter">
+         ${this.ltr}
+       </span>
+       <span class="BingoNumber-number">
+         ${this.num}
+       </span>
+     </div>`;
+  }
+
   toString() {
     return this.ltr + this.num.toString();
   }
